@@ -34,3 +34,20 @@ Not yet implemented (planned for later in Week 2):
 - `estimated_time` is always entered as a **whole number** of minutes (converted with `int()`).
 - `priority` is expected to be **high, medium, or low** — this is assumed but not yet enforced by the code.
 - Task numbers shown to the user start at **1**, while the underlying list is **zero-indexed** (the code subtracts 1 to convert).
+
+## Week 2 Day 3 Update: OOP Refactor
+
+In this refactor, each task changed from a plain dictionary into an instance of a
+`Task` class that bundles the task's data (name, priority, estimated time, and
+completion status) together with the methods that operate on it. Encapsulation adds
+control the dictionary model never had: `priority` and `is_complete` are stored as
+private attributes (`__priority`, `__is_complete`) that can only be changed through
+methods like `set_priority()` and `mark_complete()`, so `set_priority()` can reject
+an invalid value instead of letting any string be assigned. With a dictionary, any
+part of the program could write `task["priority"] = "urgent!"` with no checks at all;
+with the class, that access is guarded behind a method. Because Python objects cannot
+be written straight to a JSON file, `to_dict()` converts each `Task` into a plain
+dictionary that `json.dump()` can save, and the `from_dict()` class method rebuilds a
+`Task` object from that dictionary when the data is loaded back. Those two methods are
+the bridge between the object-based model in memory and JSON, which only understands
+basic types like dictionaries, lists, strings, numbers, and booleans.

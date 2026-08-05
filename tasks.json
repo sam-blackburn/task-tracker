@@ -2,7 +2,13 @@
     {
         "name": "Buy Lamp",
         "priority": "high",
-        "is_complete": false,
-        "estimated_time": 30
+        "estimated_time": 20,
+        "is_complete": true
+    },
+    {
+        "name": "Take bins out",
+        "priority": "urgent!",
+        "estimated_time": 12,
+        "is_complete": false
     }
 ]

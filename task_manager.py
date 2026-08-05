@@ -1,56 +1,47 @@
 # Task Manager - Week 2 main project file
 # Author: Sam Blackburn
-# Description: A CLI Task Manager that stores tasks as a list of dictionaries,
-#              saves them to a JSON file, and handles invalid input gracefully.
+# Description: A CLI Task Manager that stores tasks as Task objects, saves them
+#              to a JSON file, and handles invalid input gracefully.
 
 import json
+from task import Task   # Task class from task.py
 
 # TASKS_FILE is the name of the JSON file where tasks are saved between sessions.
 TASKS_FILE = "tasks.json"
 
-# 'tasks' is a global list that holds every task (each task is a dictionary)
+# 'tasks' is a global list that holds every task (each item is a Task object)
 # for as long as the program is running.
 tasks = []
 
 
 def add_task(name, priority, estimated_time):
-    """Create a task dictionary and append it to the global tasks list.
+    """Create a Task object and append it to the global tasks list.
 
     Args:
         name (str): the name of the task.
         priority (str): the priority level (high, medium, or low).
         estimated_time (int): estimated minutes to complete the task.
 
-    Prints a confirmation message. Returns nothing.
+    Prints a confirmation message.
     """
-    task = {
-        "name": name,
-        "priority": priority,
-        "is_complete": False,      # new tasks always start as not complete
-        "estimated_time": estimated_time,
-    }
+    task = Task(name, priority, estimated_time)   # a Task object, not a dictionary
     tasks.append(task)
     print(f"Task added: {name}")
 
 
 def view_tasks():
-    """Print every task in the tasks list with its number and details.
+    """Print every task in the tasks list with its number.
 
-    If the list is empty, prints a message saying no tasks were found.
+    Uses each Task's __str__ method. If the list is empty, prints a message.
     """
     if len(tasks) == 0:
         print("No tasks found.")
         return
 
     for i in range(len(tasks)):
-        task = tasks[i]   # local variable: the dictionary at position i
-        status = "Complete" if task["is_complete"] else "Pending"
-        print(
-            f"{i + 1}. {task['name']}"
-            f" | Priority: {task['priority']}"
-            f" | Status: {status}"
-            f" | Est. Time: {task['estimated_time']} mins"
-        )
+        task = tasks[i]
+        # printing a Task object automatically uses its __str__ method
+        print(f"{i + 1}. {task}")
 
 
 def complete_task(index):
@@ -65,8 +56,8 @@ def complete_task(index):
         print("Error: that task number does not exist.")
         return
 
-    tasks[index]["is_complete"] = True
-    print(f"Task marked complete: {tasks[index]['name']}")
+    tasks[index].mark_complete()   # use the Task method instead of setting a dict key
+    print(f"Task marked complete: {tasks[index].name}")
 
 
 def delete_task(index):
@@ -82,27 +73,30 @@ def delete_task(index):
         print("Error: that task number does not exist.")
         return
 
-    removed_task = tasks.pop(index)   # pop() removes and returns the task
-    print(f"Task deleted: {removed_task['name']}")
+    removed = tasks.pop(index)               # pop() returns the Task object
+    print(f"Task deleted: {removed.name}")   # use the object's .name attribute
 
 
 def save_tasks():
-    """Save the current tasks list to the JSON file (TASKS_FILE)."""
+    """Save the current tasks list to the JSON file (TASKS_FILE).
+
+    Each Task is converted to a plain dictionary with to_dict() first.
+    """
     with open(TASKS_FILE, "w") as file:
-        json.dump(tasks, file, indent=4)
+        json.dump([task.to_dict() for task in tasks], file, indent=4)
     print("Tasks saved.")
 
 
 def load_tasks():
     """Load tasks from the JSON file into the global tasks list.
 
-    Starts with an empty list if the file does not exist (first run) or if the
-    file contents are not valid JSON (corrupted).
+    Each saved dictionary is rebuilt into a Task object with Task.from_dict().
+    Starts with an empty list if the file is missing or corrupted.
     """
     global tasks
     try:
         with open(TASKS_FILE, "r") as file:
-            tasks = json.load(file)
+            tasks = [Task.from_dict(t) for t in json.load(file)]
         print(f"Loaded {len(tasks)} task(s).")
     except FileNotFoundError:
         tasks = []
@@ -134,7 +128,6 @@ def run_manager():
             try:
                 estimated_time = int(input("Estimated time in minutes: "))
             except ValueError:
-                # user typed something that is not a whole number
                 print("Please enter a whole number for estimated time.")
                 print()
                 continue
@@ -163,7 +156,7 @@ def run_manager():
             save_tasks()
 
         elif choice == "quit":
-            save_tasks()          # auto-save so no tasks are lost on exit
+            save_tasks()
             print("Goodbye!")
             break
 
