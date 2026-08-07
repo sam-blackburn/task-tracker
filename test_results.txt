@@ -1,0 +1,36 @@
+PS C:\Users\sambl\task-tracker> python -m unittest test_task.py -v
+test_recurring_str_contains_label (test_task.TestRecurringTask.test_recurring_str_contains_label)
+Test that RecurringTask __str__ includes the [RECURRING label. ... ok
+test_recurring_to_dict_includes_type (test_task.TestRecurringTask.test_recurring_to_dict_includes_type)
+Test that RecurringTask to_dict() includes type RecurringTask and a frequency. ... ok
+test_reset (test_task.TestRecurringTask.test_reset)
+Test that reset() sets is_complete back to False. ... Task reset for next daily: Team standup
+ok
+test_from_dict (test_task.TestTask.test_from_dict)
+Test that from_dict() recreates a Task from a dictionary correctly. ... ok
+test_mark_complete (test_task.TestTask.test_mark_complete)
+Test that mark_complete() sets is_complete to True. ... ok
+test_set_priority_invalid (test_task.TestTask.test_set_priority_invalid)
+Test that set_priority() does not update priority with an invalid value. ... Invalid priority. Choose high, medium, or low.
+ok
+test_set_priority_valid (test_task.TestTask.test_set_priority_valid)
+Test that set_priority() updates priority with a valid value. ... ok
+test_str_output (test_task.TestTask.test_str_output)
+Test that __str__ returns a string containing the task name and status. ... ok
+test_task_creation (test_task.TestTask.test_task_creation)
+Test that a Task is created with the correct initial values. ... ok
+test_to_dict (test_task.TestTask.test_to_dict)
+Test that to_dict() returns a dictionary with all required fields. ... ok
+test_urgent_priority_is_always_high (test_task.TestUrgentTask.test_urgent_priority_is_always_high)
+Test that UrgentTask always sets priority to high. ... ok
+test_urgent_str_contains_deadline (test_task.TestUrgentTask.test_urgent_str_contains_deadline)
+Test that UrgentTask __str__ includes the deadline. ... ok
+test_urgent_str_contains_label (test_task.TestUrgentTask.test_urgent_str_contains_label)
+Test that UrgentTask __str__ includes the [URGENT] label. ... ok
+test_urgent_to_dict_includes_type (test_task.TestUrgentTask.test_urgent_to_dict_includes_type)
+Test that UrgentTask to_dict() includes type UrgentTask and a deadline. ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.002s
+
+OK
